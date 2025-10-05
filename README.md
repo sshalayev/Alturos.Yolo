@@ -1,5 +1,14 @@
 ![Alturos.Yolo](doc/logo-banner.png)
 
+This fork is aimed to overcome the major flaw of the original library which is its inability to load several models (weights) simultaneously.
+Let's say we are trying to build workflow of document processing consisting of a few steps:
+1) Assess quality by detecting defects (stains, distortion etc)
+2) Detect structural elements of the document
+3) Read each structural element with appropriate model
+
+With original library one has to load appropriate weights in-between steps which will cause significant impact on overall processing duration. Basically reloading weights will take more time than detection itself in many cases.
+
+[YoloMultiWrapper](src/Alturos.Yolo/YoloMultiWrapper.cs) class solves the problem by creating separate copy of yolo*.dll and loading functions from it using Kernel32.dll methods 
 # Alturos.Yolo
 
 A state of the art real-time object detection system for C# (Visual Studio). This project has CPU and GPU support, with GPU the detection works much faster. The primary goal of this project is an easy use of yolo, this package is available on nuget and you must only install two packages to start detection. In the background we are use the Windows Yolo version of [AlexeyAB/darknet](https://github.com/AlexeyAB/darknet). Send an image path or the byte array to [yolo](https://github.com/pjreddie/darknet) and receive the position of the detected objects. Our project is meant to return the object-type and -position as processable data. This library supports [YoloV3 and YoloV2 Pre-Trained Datasets](#pre-trained-dataset)

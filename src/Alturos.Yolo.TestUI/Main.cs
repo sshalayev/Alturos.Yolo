@@ -13,7 +13,7 @@ namespace Alturos.Yolo.TestUI
 {
     public partial class Main : Form
     {
-        private YoloWrapper _yoloWrapper;
+        private YoloMultiWrapper _yoloWrapper;
 
         public Main()
         {
@@ -33,7 +33,7 @@ namespace Alturos.Yolo.TestUI
             var imageInfos = new DirectoryImageReader().Analyze(@".\Images");
             this.dataGridViewFiles.DataSource = imageInfos.ToList();
 
-            Task.Run(() => this.Initialize("."));
+            Task.Run(() => this.Initialize(@".\config\blackjack"));
             this.LoadAvailableConfigurations();
         }
 
@@ -287,7 +287,9 @@ namespace Alturos.Yolo.TestUI
 
                 var sw = new Stopwatch();
                 sw.Start();
-                this._yoloWrapper = new YoloWrapper(config.ConfigFile, config.WeightsFile, config.NamesFile, gpuConfig);
+                this._yoloWrapper = null == gpuConfig 
+                    ? new YoloMultiWrapper(config.ConfigFile, config.WeightsFile, config.NamesFile) 
+                    : new YoloMultiWrapper(config.ConfigFile, config.WeightsFile, config.NamesFile, gpuConfig);
                 sw.Stop();
 
                 var action = new MethodInvoker(delegate ()
